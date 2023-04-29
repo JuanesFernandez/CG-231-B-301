@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <title>Ac>27/04>JuanFernandez</title>
+    <style>
+      html, body { margin: 0; padding: 0; overflow: hidden; }
+            #text {
+                position: absolute;
+                padding: 10px;
+                width: 100%;
+                height: 100%;
+                text-align: left;
+                color: #ffffff;
+            } 
+    </style>
+  </head>
+  <body>
+  </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r94/three.min.js"></script>
+    <script type="module">
+        import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+
+        //Camara
+        var scene = new THREE.Scene();
+
+        var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);//Perspective camera
+        //               THREE.PerspectiveCamera(cono de vision, ancho / alto, limite z cerca, limite z lejos)
+        scene.add(camera);
+
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0xaaaaaa, 1.0);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        camera.position.x = 20;
+        camera.position.y = 20;
+        camera.position.z = 20;
+        camera.lookAt(scene.position);
+
+        //Orbit Controls
+        var controls = new OrbitControls(camera, renderer.domElement);
+
+        //Cuadricula
+        const size = 150;
+        const divisions = 150;
+        const axesHelper = new THREE.AxesHelper(10);
+        scene.add(axesHelper);
+
+        const gridHelper = new THREE.GridHelper(size, divisions);
+        scene.add(gridHelper);
+        
+        //Piramire
+
+        function Geometria(vx){
+            geo = new THREE.Geometry();
+            var largoVertice = vx.length;
+            for (var i = 0; i < largoVertice; i++){
+            var [x,y,z]=[vx[i][0],vx[i][1],vx[i][2]]
+                var vector = new THREE.Vector3(x, y, z);
+                geo.vertices.push(vector);
+            }
+        return geo;
+        }    
+
+        var lado = 4;
+        var h = 5;
+
+        //Vertices
+        
+        var [v1, v2, v3, v4, v5] = [[0,0,0],[lado,0,0],[lado,0,lado],[0,0,lado],[lado/2,h,lado/2]];
+
+        //Material
+        var material = new THREE.ParticleBasicMaterial({color:0x9f0eff});
+
+        //Geometria
+        var vertices = [v1,v2,v3,v4,v5,v1,v4,v3,v5,v2];
+        var geo = Geometria(vertices);
+        
+        var fig = new THREE.Line(geo,material);
+        
+        //Añadir a la escena
+        document.body.appendChild(renderer.domElement);
+
+        scene.add(fig);
+        
+        function render() {
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+        }
+
+        render();
+
+		</script>
+	</body>
+</html>
